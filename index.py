@@ -5,9 +5,9 @@ from google.cloud import storage, bigquery
 from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
-# -------------------------
+
 # CONFIG
-# -------------------------
+
 PROJECT_ID   = "gen-lang-client-0101408499"
 REGION       = "us-west1"
 BUCKET       = "my-file-vertex"
@@ -23,9 +23,10 @@ bq  = bigquery.Client(project=PROJECT_ID, location=REGION)
 gcs = storage.Client(project=PROJECT_ID)
 
 
-# -------------------------
+
 # HELPERS
-# -------------------------
+
+# Uploding to GCS
 def upload_to_gcs(local_path: str) -> str:
     """Upload file to GCS and return gs:// URI"""
     bucket = gcs.bucket(BUCKET)
@@ -33,6 +34,7 @@ def upload_to_gcs(local_path: str) -> str:
     blob.upload_from_filename(local_path)
     return f"gs://{BUCKET}/{blob.name}"
 
+# Chunk PDF
 def chunk_pdf(pdf_path: str, size=1000, overlap=200) -> List[dict]:
     """Extract and chunk text from PDF"""
     docs = PyPDFLoader(pdf_path).load()
@@ -45,10 +47,12 @@ def chunk_pdf(pdf_path: str, size=1000, overlap=200) -> List[dict]:
         for i, c in enumerate(chunks)
     ]
 
+# Insert chunks into BigQuery
 def insert_chunks(chunks: List[dict]):
     """Insert chunk rows into BigQuery"""
     bq.insert_rows_json(f"{PROJECT_ID}.{DATASET}.{DOCS_TABLE}", chunks)
 
+# Generate embeddings
 def generate_embeddings():
     """Generate embeddings for chunks"""
     query = f"""
@@ -71,6 +75,7 @@ WHERE ARRAY_LENGTH(ml_generate_embedding_result) > 0;
     """
     bq.query(query).result()
 
+# Answer query
 def answer_query(query: str, debug: bool = False) -> str:
     """Retrieve relevant chunks + generate refined answer"""
     retrieve_sql = f"""
@@ -138,9 +143,9 @@ Answer:
         return raw_answer
 
 
-# -------------------------
+
 # STREAMLIT APP
-# -------------------------
+
 st.title("Use File With .pdf Extension")
 
 # Upload PDF

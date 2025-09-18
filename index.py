@@ -19,12 +19,12 @@ EMBED_MODEL = "gen-lang-client-0101408499.document.embedding_model"
 TEXT_MODEL  = "gen-lang-client-0101408499.document.gemini_model"
 
 # Auth
-bq  = bigquery.Client(project=PROJECT_ID, location=REGION)
-gcs = storage.Client(project=PROJECT_ID)
+#bq  = bigquery.Client(project=PROJECT_ID, location=REGION)
+#gcs = storage.Client(project=PROJECT_ID)
 
 creds = st.secrets["gcp_service_account"]
-client = bigquery.Client.from_service_account_info(dict(creds))
-
+bq = bigquery.Client.from_service_account_info(dict(creds))
+gcs = storage.Client.from_service_account_info(dict(creds))
 # HELPERS
 
 # Uploding to GCS

@@ -27,6 +27,8 @@ bq = bigquery.Client.from_service_account_info(dict(creds))
 gcs = storage.Client.from_service_account_info(dict(creds))
 # HELPERS
 
+
+
 # Uploding to GCS
 def upload_to_gcs(local_path: str) -> str:
     """Upload file to GCS and return gs:// URI"""

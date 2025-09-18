@@ -1,8 +1,7 @@
-streamlit
+streamlit==1.40.2
 google-cloud-storage
 google-cloud-bigquery
 langchain
 PyPDF2
 langchain-community
-db-types==1.3.0
 pandas

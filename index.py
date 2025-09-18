@@ -22,7 +22,8 @@ TEXT_MODEL  = "gen-lang-client-0101408499.document.gemini_model"
 bq  = bigquery.Client(project=PROJECT_ID, location=REGION)
 gcs = storage.Client(project=PROJECT_ID)
 
-
+creds = st.secrets["gcp_service_account"]
+client = bigquery.Client.from_service_account_info(dict(creds))
 
 # HELPERS
 

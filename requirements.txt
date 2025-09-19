@@ -5,3 +5,4 @@ langchain
 pypdf
 langchain-community
 pandas
+db-dtypes==1.3.0
